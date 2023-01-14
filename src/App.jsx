@@ -3,6 +3,8 @@ import facade from "./apiFacade";
 import LogIn from "./components/Login";
 import LoggedIn from "./components/LoggedIn";
 
+// Test text for commit
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(facade.loggedIn);
 
