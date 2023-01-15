@@ -2,19 +2,28 @@ import React, { useRef } from "react";
 
 const Search = (props) => {
   const inputRef = useRef();
-  console.log(inputRef)
-
+  console.log(inputRef);
   return (
     <div>
-      <h3>Search</h3>
+      <h3> Search</h3>
       <form>
-        <input ref={inputRef} required type="search" placeholder="Search" />
-        <button type="submit" onClick={() => {
+        <input
+          type="search"
+          ref={inputRef}
+          required
+          placeholder="Search....  "
+        />
+        <button
+          type="submit"
+          onClick={() => {
             inputRef.current.focus();
-        }}> Submit </button>
+          }}
+        >
+          {" "}
+          Search
+        </button>
       </form>
     </div>
   );
 };
-
 export default Search;

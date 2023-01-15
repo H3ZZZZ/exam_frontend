@@ -4,8 +4,9 @@ import { Link, Outlet } from "react-router-dom";
 const Home = () => {
   return (
     <div>
-      <h3> Homepage </h3>
-      <Link to="/person">Show a Person</Link>
+      <h3> Welcome to Frederik's Exam Project </h3>
+      <br />
+      <Link to="/contentpage">Go to content page</Link>
       <Outlet />
     </div>
   );
