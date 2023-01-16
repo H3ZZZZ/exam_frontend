@@ -1,26 +1,33 @@
 import React, { useState } from "react";
-import "../styles/Register.css";
+import { useEffect } from "react";
+import facade, { API_URL } from "../apiFacade";
 
 function Register() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
   const [message, setMessage] = useState("");
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    fetch(API_URL + "/api/user/roles")
+      .then((res) => res.json())
+      .then((data) => setRoles(data));
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(
-        "https://frederikhess.dk/tomcat/exam/api/user/create",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, role: userType }),
-        }
-      );
+      const response = await fetch(API_URL + "/api/user/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, email, role: userType }),
+      });
       if (response.ok) {
-        setMessage(`You were successfully registered as a ${userType}`);
+        setMessage("You were successfully registered");
         setUsername("");
+        setEmail("");
         setPassword("");
         setUserType("");
       } else {
@@ -45,6 +52,15 @@ function Register() {
             onChange={(event) => setUsername(event.target.value)}
           />
         </label>
+        <label>
+          <div className="register-label">Email:</div>
+          <input
+            className="register-input"
+            type="text"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        </label>
         <br />
         <label>
           <div className="register-label">Password:</div>
@@ -66,8 +82,11 @@ function Register() {
             <option value="" disabled>
               Select user type
             </option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
+            {roles?.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.roleName}
+              </option>
+            ))}
           </select>
         </label>
         <br />

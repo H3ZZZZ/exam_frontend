@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
 import React from "react";
+import facade, { getUserName } from "../apiFacade";
 
 function LoggedIn() {
-  const [dataFromServer, setDataFromServer] = useState("");
-
-  useEffect(() => {
-    /*TODO*/
-  }, []);
-
   return (
     <div>
-      <h2>Logged in as </h2>
-      <h3>{dataFromServer}</h3>
+      <h2>Logged in as {getUserName()} </h2>
     </div>
   );
 }

@@ -1,51 +1,54 @@
-import React, { useState } from "react";
-import OwnersList from "./OwnersList";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import facade from "../apiFacade";
+const Contentpage = () => {
+  const [trips, setTrips] = useState([]);
+  const navigate = useNavigate();
+  let isAdmin = false;
+  const fToken = facade.getToken();
 
-function ContentPage() {
-  const [boatId, setBoatId] = useState("");
-  const [owners, setOwners] = useState([]);
-  const [message, setMessage] = useState("");
+  if (fToken) {
+    const token = jwtDecode(fToken)?.roles;
+    isAdmin = token?.toLowerCase()?.includes("admin");
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(
-        `https://frederikhess.dk/tomcat/exam/api/owner/${boatId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setOwners(data);
-        setMessage("");
-      } else if (response.status === 404) {
-        setMessage("Boat not found.");
-      } else {
-        setMessage("An error occurred while searching for boat owners.");
-      }
-    } catch (error) {
-      console.error(error);
-      setMessage("An error occurred while searching for boat owners.");
-    }
-  };
+  useEffect(() => {
+    fetch("http://localhost:8080/api/trip/all")
+      .then((res) => res.json())
+      .then((data) => setTrips(data));
+  }, []);
+
   return (
-    <div className="content-page">
-      <form onSubmit={handleSubmit}>
-        <label>
-          <div className="search-label">Boat ID:</div>
-          <input
-            className="search-input"
-            type="text"
-            value={boatId}
-            onChange={(event) => setBoatId(event.target.value)}
-          />
-        </label>
-        <br />
-        <button className="search-button" type="submit">
-          Search
-        </button>
-      </form>
-      <OwnersList owners={owners} message={message} />
+    <div className="all-trips">
+      {isAdmin && (
+        <div className="all-trips-button">
+          <div className="button-cont">
+            <button onClick={() => navigate("create/trip")}>
+              Create new trip
+            </button>
+            <button onClick={() => navigate("create/guide")}>
+              Create new guide
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="cont">
+        <h1>All trips</h1>
+      </div>
+      {trips?.map((trip) => (
+        <div
+          key={trip.name}
+          onClick={() => navigate(trip.id.toString())}
+          className="trip"
+        >
+          <h2>{trip.name}</h2>
+          <p>{trip.startdate}</p>
+          <p>{trip.enddate}</p>
+        </div>
+      ))}
     </div>
   );
-}
+};
 
-export default ContentPage;
+export default Contentpage;

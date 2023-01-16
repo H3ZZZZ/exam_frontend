@@ -6,7 +6,7 @@ const Home = () => {
     <div>
       <h3> Welcome to Frederik's Exam Project </h3>
       <br />
-      <Link to="/contentpage">Go to content page</Link>
+      <Link to="/trips">Go see all the trips!</Link>
       <Outlet />
     </div>
   );
